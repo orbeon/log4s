@@ -5,6 +5,8 @@ object Publish {
   import Resolvers._
   import Helpers._
 
+  import sbtghpackages.GitHubPackagesPlugin.autoImport._
+
   val sonaCreds = (
     for {
       user <- getProp("SONATYPE_USER")
@@ -22,12 +24,18 @@ object Publish {
     pomIncludeRepository    := { _ => false },
     publishArtifact in Test := false,
 
-    publishTo               := {
-      if (version.value.trim endsWith "SNAPSHOT")
-        Some(sonatypeSnaps)
-      else
-        Some(sonatypeStaging)
-    },
+//    publishTo               := {
+//      if (version.value.trim endsWith "SNAPSHOT")
+//        Some(sonatypeSnaps)
+//      else
+//        Some(sonatypeStaging)
+//    },
+
+    // FIXME: temporary hardcoded settings for GitHub Packages
+    githubOwner       := "orbeon",
+    githubRepository  := BasicSettings.githubProject,
+    githubTokenSource := TokenSource.Environment("GITHUB_TOKEN"),
+    publishTo         := githubPublishTo.value,
 
     pomExtra                := BasicSettings.developerInfo
   )
