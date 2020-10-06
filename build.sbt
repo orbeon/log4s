@@ -82,8 +82,6 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file ("core"))
 
     unmanagedSourceDirectories in Compile ++= {
       scalaBinaryVersion.value match {
-        case "2.10" | "2.11" =>
-          Seq.empty
         case _ =>
           Seq(baseDirectory.value / ".." / "shared" / "src" / "main" / "scala-2.11")
       }
@@ -91,7 +89,7 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file ("core"))
 
     unmanagedSourceDirectories in Compile ++= {
       scalaBinaryVersion.value match {
-        case "2.10" | "2.11" | "2.12" =>
+        case "2.12" =>
           Seq(baseDirectory.value / ".." / "shared" / "src" / "main" / "scala-oldcoll")
         case _ =>
           Seq(baseDirectory.value / ".." / "shared" / "src" / "main" / "scala-newcoll")
@@ -104,11 +102,6 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file ("core"))
     prevVersions := {
       /* I'm using the first & last version of each minor release rather than
        * including every single patch-level update. */
-      def `2.11Versions` =
-        Set("1.0.3", "1.0.5",
-            "1.1.0", "1.1.5",
-            "1.2.0", "1.2.1",
-            "1.3.0")
       def `2.12Versions` =
         Set("1.3.3", "1.3.6",
             "1.4.0",
@@ -119,7 +112,6 @@ lazy val core = (crossProject(JSPlatform, JVMPlatform) in file ("core"))
       def `2.13Versions` =
         Set("1.8.2")
       scalaBinaryVersion.value match {
-        case "2.10" | "2.11" => `2.11Versions` ++ `2.12Versions` ++ `2.13Versions`
         case "2.12"          => `2.12Versions` ++ `2.13Versions`
         case "2.13"          => `2.13Versions`
         case other           =>
@@ -154,9 +146,9 @@ lazy val testing = (crossProject(JSPlatform, JVMPlatform) in file ("testing"))
       val `2.12Versions` = Set("1.5.0", "1.6.0", "1.6.1", "1.7.0", "1.8.0", "1.8.1")
       val `2.13Versions` = Set("1.8.2")
       scalaBinaryVersion.value match {
-        case "2.10" | "2.11" | "2.12" => `2.12Versions` ++ `2.13Versions`
-        case "2.13"                   => `2.13Versions`
-        case other =>
+        case "2.12" => `2.12Versions` ++ `2.13Versions`
+        case "2.13" => `2.13Versions`
+        case _ =>
           Set.empty
       }
     }
